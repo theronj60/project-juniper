@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"strings"
+	"flag"
 	"github.com/AlecAivazis/survey/v2"
+	"github.com/theronj60/project-juniper/caeser"
 )
 
 // var question = []*survey.Question{
@@ -18,7 +19,7 @@ import (
 var question = &survey.Select{
 	Message: "Which cipher would you like to use?",
 	Options: []string{"caeser", "vigenere"},
-} 
+}
 
 var prompt = &survey.Input{
 	Message: "Enter your value to encrypt.",
@@ -27,6 +28,10 @@ var prompt = &survey.Input{
 func main() {
 	var cipher string = ""
 	var value string = ""
+	file := flag.Bool("f", false, "a bool")
+	text := flag.Bool("t", false, "a bool")
+
+	flag.Parse()
 
 	err := survey.AskOne(question, &cipher)
 	if err != nil {
@@ -40,11 +45,21 @@ func main() {
 		return
 	}
 
-	value = strings.ToLower(value)
+	// @TODO need to add an argument for specifying encrypt or decrypt
 
-	fmt.Println("Cipher: ", cipher, "\nValue: ", value)
-	// v1
-	// prompt for input
-	// print to file
-	// load file
+	switch cipher {
+	case "caeser":
+		if *file {
+			caeser.Encrypt(value, "file")
+			fmt.Println("file is true")
+		}
+		if *text {
+			caeser.Encrypt(value, "text")
+			fmt.Println("text is true")
+		}	
+	case "vigenere":
+		fmt.Println("vigenere")
+	default:
+		fmt.Println("default")
+	}
 }
