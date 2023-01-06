@@ -54,8 +54,7 @@ func main() {
 			fmt.Println("file is true")
 		}
 		if *text {
-			caeser.Encrypt(value, "text")
-			fmt.Println("text is true")
+			fmt.Println(caeser.Encrypt(value, "text"))
 		}	
 	case "vigenere":
 		fmt.Println("vigenere")

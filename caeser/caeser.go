@@ -1,6 +1,10 @@
 package caeser
 
-import "fmt"
+import (
+	"fmt"
+	"math/rand"
+	"strings"
+)
 
 // read from text file
 // should encrypt or decrypt text
@@ -9,7 +13,7 @@ import "fmt"
 // reverse it with decrypting
 
 // create a variable (array) to convert spaces to a random but predefined character
-// var spaceChar string = {}array
+var spaceChar = [...]string{"&","$","*","#"}
 
 func readFile() {
 	//
@@ -20,6 +24,7 @@ func writeFile() {
 }
 
 func Encrypt(str string, method string) string {
+	var encrpytedValue string
 	if method == "file" {
 		// for i, r := range str {
 		// 	fmt.Println("encrypt caeser file")
@@ -27,15 +32,18 @@ func Encrypt(str string, method string) string {
 		// needs to read file
 		// then loop through string
 	} else {
-		var encryptedTxt []string
+		var encryptedArray []string
 		for _, r := range str {
-			encryptedTxt = append(encryptedTxt, string(r + 3))
+			if r == 32 {
+				randIndex := rand.Intn(len(spaceChar))
+				encryptedArray = append(encryptedArray, string(spaceChar[randIndex]))
+			} else {
+				encryptedArray = append(encryptedArray, string(r + 3))
+			}
 		} 
-		fmt.Println(encryptedTxt)
-		// needs to loop through string
-		fmt.Println("encrypt caeser text")
+		encrpytedValue = strings.Join(encryptedArray, "")
 	}
-	return "string encrypt"
+	return encrpytedValue
 }
 
 func Decrypt(str string, method string) string {
