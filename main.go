@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"flag"
+	"fmt"
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/theronj60/project-juniper/caeser"
 )
@@ -21,15 +21,21 @@ var question = &survey.Select{
 	Options: []string{"caeser", "vigenere"},
 }
 
-var prompt = &survey.Input{
+var promptEncrypt = &survey.Input{
 	Message: "Enter your value to encrypt.",
+}
+
+var promptDecrypt = &survey.Input{
+	Message: "Enter your value to decrypt.",
 }
 
 func main() {
 	var cipher string = ""
 	var value string = ""
-	file := flag.Bool("f", false, "a bool")
-	text := flag.Bool("t", false, "a bool")
+	file := flag.Bool("f", false, "sets cipher to use a file and parse it.")
+	text := flag.Bool("t", false, "sets cipher to use provided string.")
+	encrypt := flag.Bool("encrypt", false, "sets cipher to encrypt.")
+	decrypt := flag.Bool("decrypt", false, "sets cipher to decrypt.")
 
 	flag.Parse()
 
@@ -39,23 +45,45 @@ func main() {
 		return
 	}
 
-	survey.AskOne(prompt, &value)
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
+	func(encrypt bool, decrypt bool) {
+		if encrypt {
+			survey.AskOne(promptEncrypt, &value)
+			if err != nil {
+				fmt.Println(err.Error())
+				return
+			}
+		}
+		if decrypt {
+			survey.AskOne(promptDecrypt, &value)
+			if err != nil {
+				fmt.Println(err.Error())
+				return
+			}
+		}
+	}(*encrypt, *decrypt)
 
-	// @TODO need to add an argument for specifying encrypt or decrypt
+	// @TODO add error handling and hints
 
 	switch cipher {
 	case "caeser":
 		if *file {
-			caeser.Encrypt(value, "file")
+			if *encrypt {
+				caeser.Encrypt(value, "file")
+			}
+			if *decrypt {
+				caeser.Decrypt(value, "file")
+			}
 			fmt.Println("file is true")
 		}
 		if *text {
-			fmt.Println(caeser.Encrypt(value, "text"))
-		}	
+			if *encrypt {
+				// @TODO see if we can do a return instead
+				fmt.Println(caeser.Encrypt(value, "text"))
+			}
+			if *decrypt {
+				fmt.Println(caeser.Decrypt(value, "text"))
+			}
+		}
 	case "vigenere":
 		fmt.Println("vigenere")
 	default:

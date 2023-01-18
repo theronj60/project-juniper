@@ -8,12 +8,22 @@ import (
 
 // read from text file
 // should encrypt or decrypt text
-// convert lines to runes?
 // take a single letter and shift it right 3 spots in the alphabet to encrpyt
-// reverse it with decrypting
 
 // create a variable (array) to convert spaces to a random but predefined character
-var spaceChar = [...]string{"&","$","*","#"}
+// needed? no, good start for something? maybe
+var spaceChar = []string{"&","$","*","#"}
+
+// helper functions
+func contains(s []string, str string) bool {
+	for _, v := range s {
+		if v == str {
+			return true
+		}
+	}
+	return false
+}
+// end helper functions
 
 func readFile() {
 	//
@@ -25,6 +35,7 @@ func writeFile() {
 
 func Encrypt(str string, method string) string {
 	var encrpytedValue string
+
 	if method == "file" {
 		// for i, r := range str {
 		// 	fmt.Println("encrypt caeser file")
@@ -47,12 +58,20 @@ func Encrypt(str string, method string) string {
 }
 
 func Decrypt(str string, method string) string {
+	var decryptedValue string
+
 	if method == "file" {
 		fmt.Println("decrypt caeser file")
-		//
 	} else {
-		fmt.Println("decrypt caeser text")
-		//
+		var decryptedArray []string
+		for _, r := range str {
+			if contains(spaceChar, string(r)) {
+				decryptedArray = append(decryptedArray, " ")
+			} else {
+				decryptedArray = append(decryptedArray, string(r - 3))
+			}
+		}
+		decryptedValue = strings.Join(decryptedArray, "")
 	}
-	return "string decrypt"
+	return decryptedValue
 }
